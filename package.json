@@ -1,0 +1,17 @@
+{
+  "name": "my_template",
+  "version": "1.0.0",
+  "description": "This guid is captured from the youtube video. [RaynYoutubeChannel](https://www.youtube.com/watch?v=YfS5BJ4IXcQ)",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "vite": "5.3.1",
+    "vite-plugin-elm-watch": "1.3.4"
+  }
+}
