@@ -1,22 +1,52 @@
 module Main exposing (main)
 
--- import Browser
-
+import Browser
 import Html exposing (..)
-import Html.Attributes as Attr
+import Navbar exposing (..)
 
 
-view : Html msg
-view =
-    Html.div []
-        [ Html.p [ Attr.class "title has-text-centered has-text-info has-background-dark" ]
-            [ Html.text "Hello Elm" ]
-        , Html.p
-            [ Attr.class "subtitle has-text-centered has-text-warning has-background-light" ]
-            [ Html.text "from Scratch " ]
-        ]
+
+-- MAIN
 
 
-main : Html msg
+main : Program () Model Msg
 main =
-    view
+    Browser.sandbox { init = init, update = update, view = view }
+
+
+
+-- MODEL
+
+
+type alias Model =
+    { navBar : Navbar.Model
+    }
+
+
+init : Model
+init =
+    { navBar = Navbar.defaultModel }
+
+
+
+-- UPDATE
+
+
+type Msg
+    = None
+
+
+update : Msg -> Model -> Model
+update msg model =
+    case msg of
+        None ->
+            model
+
+
+
+-- VIEW
+
+
+view : Model -> Html Msg
+view model =
+    Navbar.nav model.navBar
