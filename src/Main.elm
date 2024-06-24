@@ -34,6 +34,7 @@ main =
 type alias Model =
     { window : { width : Int, height : Int }
     , navBar : NavModel
+    , breadCrumb : BreadCrumbModel
     }
 
 
@@ -56,6 +57,7 @@ init json =
         Ok flags ->
             ( { window = { width = flags.windowWidth, height = flags.windowHeight }
               , navBar = defaultModel
+              , breadCrumb = { count = 0 }
               }
             , Cmd.none
             )
@@ -63,6 +65,7 @@ init json =
         Err _ ->
             ( { window = { width = 0, height = 0 }
               , navBar = defaultModel
+              , breadCrumb = { count = 0 }
               }
             , Cmd.none
             )
@@ -105,7 +108,14 @@ update msg model =
 
 view : Model -> Html MainMsg
 view model =
-    nav model.navBar
+    Html.div []
+        [ nav model.navBar
+        , breadCrumb model.breadCrumb
+        ]
+
+
+
+-- NAV BAR Section
 
 
 type alias NavModel =
@@ -133,7 +143,10 @@ nav model =
 
 navBarBurger : Html MainMsg
 navBarBurger =
-    Html.a [ Attr.class "navbar-burger" ]
+    Html.a
+        [ Attr.class "navbar-burger"
+        , Events.onClick OnNavbarClicked
+        ]
         [ Html.span [] []
         , Html.span [] []
         , Html.span [] []
@@ -158,7 +171,6 @@ navBarLogo : NavModel -> Html MainMsg
 navBarLogo model =
     Html.div
         [ Attr.class "navbar-brand"
-        , Events.onClick OnNavbarClicked
         ]
         [ navBarLogoDetails model
         , navBarBurger
@@ -197,4 +209,34 @@ navBarMenu model =
         ]
         [ Html.div [ Attr.class "navbar-end" ]
             items
+        ]
+
+
+
+-- Bredcrumbs section
+
+
+type alias BreadCrumbModel =
+    { count : Int }
+
+
+breadCrumb : BreadCrumbModel -> Html MainMsg
+breadCrumb model =
+    Html.section [ Attr.class "section pt-4 pb-0" ]
+        [ Html.nav [ Attr.class "breadcrumb" ]
+            [ Html.ul []
+                [ Html.li []
+                    [ Html.a []
+                        [ Html.text "vbuntu" ]
+                    ]
+                , Html.li []
+                    [ Html.a []
+                        [ Html.text "about" ]
+                    ]
+                , Html.li []
+                    [ Html.a []
+                        [ Html.text "blog" ]
+                    ]
+                ]
+            ]
         ]
