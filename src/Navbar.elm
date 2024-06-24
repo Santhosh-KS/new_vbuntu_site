@@ -1,7 +1,8 @@
-module Navbar exposing (Model, defaultModel, nav)
+module Navbar exposing (Model, Msg(..), defaultModel, nav)
 
 import Html exposing (..)
 import Html.Attributes as Attr
+import Html.Events as Events
 
 
 type alias Model =
@@ -9,6 +10,10 @@ type alias Model =
     , isBurgerIconClicked : Bool
     , navBarListItems : List ( String, String )
     }
+
+
+type Msg
+    = OnBurgerIconClicked
 
 
 defaultModel : Model
@@ -19,15 +24,15 @@ defaultModel =
     }
 
 
-nav : Model -> Html msg
+nav : Model -> Html Msg
 nav model =
-    Html.nav [ Attr.class "navbar has-shadow is-light" ]
+    Html.nav [ Attr.class "navbar has-shadow is-dark" ]
         [ navBarLogo model
         , navBarMenu model
         ]
 
 
-navBarBurger : Html msg
+navBarBurger : Html Msg
 navBarBurger =
     Html.a [ Attr.class "navbar-burger" ]
         [ Html.span [] []
@@ -37,7 +42,14 @@ navBarBurger =
         ]
 
 
-navBarLogoDetails : Model -> Html msg
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        OnBurgerIconClicked ->
+            ( model, Cmd.none )
+
+
+navBarLogoDetails : Model -> Html Msg
 navBarLogoDetails model =
     Html.a [ Attr.class "navbar-item", Attr.href model.logoPath ]
         [ Html.img
@@ -50,29 +62,45 @@ navBarLogoDetails model =
         ]
 
 
-navBarLogo : Model -> Html msg
+navBarLogo : Model -> Html Msg
 navBarLogo model =
-    Html.div [ Attr.class "navbar-brand" ]
+    Html.div
+        [ Attr.class "navbar-brand"
+        , Events.onClick OnBurgerIconClicked
+        ]
         [ navBarLogoDetails model
         , navBarBurger
         ]
 
 
-navItemList : ( String, String ) -> Html msg
+navItemList : ( String, String ) -> Html Msg
 navItemList ( name, href ) =
     Html.a
         [ Attr.class "navbar-item", Attr.href href ]
         [ Html.text name ]
 
 
-navBarMenu : Model -> Html msg
+navBarMenuIsActive : Bool -> String
+navBarMenuIsActive isActive =
+    let
+        navBar =
+            "navbar-menu"
+    in
+    if isActive then
+        navBar ++ " is-active"
+
+    else
+        navBar
+
+
+navBarMenu : Model -> Html Msg
 navBarMenu model =
     let
         items =
             List.map navItemList model.navBarListItems
     in
     Html.div
-        [ Attr.class "navbar-menu"
+        [ Attr.class (navBarMenuIsActive model.isBurgerIconClicked)
         , Attr.id "nav-links"
         ]
         [ Html.div [ Attr.class "navbar-end" ]
