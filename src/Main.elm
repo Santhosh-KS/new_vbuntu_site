@@ -3,11 +3,12 @@ module Main exposing (main)
 import Browser
 import Browser.Events
 import Html exposing (..)
+import Html.Attributes as Attr
+import Html.Events as Events
 import Json.Decode
-import Navbar exposing (..)
 
 
-subscriptions : Model -> Sub Msg
+subscriptions : Model -> Sub MainMsg
 subscriptions _ =
     Browser.Events.onResize ResizedWindow
 
@@ -16,7 +17,7 @@ subscriptions _ =
 -- MAIN
 
 
-main : Program Json.Decode.Value Model Msg
+main : Program Json.Decode.Value Model MainMsg
 main =
     Browser.element
         { init = init
@@ -32,7 +33,7 @@ main =
 
 type alias Model =
     { window : { width : Int, height : Int }
-    , navBar : Navbar.Model
+    , navBar : NavModel
     }
 
 
@@ -49,19 +50,19 @@ flagsDecoder =
         (Json.Decode.field "windowHeight" Json.Decode.int)
 
 
-init : Json.Decode.Value -> ( Model, Cmd Msg )
+init : Json.Decode.Value -> ( Model, Cmd MainMsg )
 init json =
     case Json.Decode.decodeValue flagsDecoder json of
         Ok flags ->
             ( { window = { width = flags.windowWidth, height = flags.windowHeight }
-              , navBar = Navbar.defaultModel
+              , navBar = defaultModel
               }
             , Cmd.none
             )
 
         Err _ ->
             ( { window = { width = 0, height = 0 }
-              , navBar = Navbar.defaultModel
+              , navBar = defaultModel
               }
             , Cmd.none
             )
@@ -71,16 +72,28 @@ init json =
 -- UPDATE
 
 
-type Msg
+type MainMsg
     = OnNavbarClicked
     | ResizedWindow Int Int
 
 
-update : Msg -> Model -> ( Model, Cmd Msg )
+update : MainMsg -> Model -> ( Model, Cmd MainMsg )
 update msg model =
+    let
+        flag =
+            not model.navBar.isBurgerIconClicked
+    in
     case msg of
         OnNavbarClicked ->
-            ( model, Cmd.none )
+            ( { model
+                | navBar =
+                    { isBurgerIconClicked = flag
+                    , logoPath = model.navBar.logoPath
+                    , navBarListItems = model.navBar.navBarListItems
+                    }
+              }
+            , Cmd.none
+            )
 
         ResizedWindow w h ->
             ( { model | window = { width = w, height = h } }, Cmd.none )
@@ -90,12 +103,98 @@ update msg model =
 -- VIEW
 
 
-view : Model -> Html Msg
+view : Model -> Html MainMsg
 view model =
-    Html.div []
-        [ Html.text ("Width :" ++ String.fromInt model.window.width ++ "\n\nHeight :" ++ String.fromInt model.window.height)
+    nav model.navBar
+
+
+type alias NavModel =
+    { logoPath : String
+    , isBurgerIconClicked : Bool
+    , navBarListItems : List ( String, String )
+    }
+
+
+defaultModel : NavModel
+defaultModel =
+    { logoPath = "./assets/logo.png"
+    , isBurgerIconClicked = False
+    , navBarListItems = [ ( "My Account", "" ), ( "Sign-in", "" ), ( "Shopping Cart (0)", "" ) ]
+    }
+
+
+nav : NavModel -> Html MainMsg
+nav model =
+    Html.nav [ Attr.class "navbar has-shadow is-dark" ]
+        [ navBarLogo model
+        , navBarMenu model
         ]
 
 
+navBarBurger : Html MainMsg
+navBarBurger =
+    Html.a [ Attr.class "navbar-burger" ]
+        [ Html.span [] []
+        , Html.span [] []
+        , Html.span [] []
+        , Html.span [] []
+        ]
 
--- Navbar.nav model.navBar
+
+navBarLogoDetails : NavModel -> Html MainMsg
+navBarLogoDetails model =
+    Html.a [ Attr.class "navbar-item", Attr.href model.logoPath ]
+        [ Html.img
+            [ Attr.src model.logoPath
+            , Attr.alt "Site Logo"
+            , Attr.style "max-height" "70px"
+            , Attr.class "py-1 px-1"
+            ]
+            []
+        ]
+
+
+navBarLogo : NavModel -> Html MainMsg
+navBarLogo model =
+    Html.div
+        [ Attr.class "navbar-brand"
+        , Events.onClick OnNavbarClicked
+        ]
+        [ navBarLogoDetails model
+        , navBarBurger
+        ]
+
+
+navItemList : ( String, String ) -> Html MainMsg
+navItemList ( name, href ) =
+    Html.a
+        [ Attr.class "navbar-item", Attr.href href ]
+        [ Html.text name ]
+
+
+navBarMenuIsActive : Bool -> String
+navBarMenuIsActive isActive =
+    let
+        navBar =
+            "navbar-menu"
+    in
+    if isActive then
+        navBar ++ " is-active"
+
+    else
+        navBar
+
+
+navBarMenu : NavModel -> Html MainMsg
+navBarMenu model =
+    let
+        items =
+            List.map navItemList model.navBarListItems
+    in
+    Html.div
+        [ Attr.class (navBarMenuIsActive model.isBurgerIconClicked)
+        , Attr.id "nav-links"
+        ]
+        [ Html.div [ Attr.class "navbar-end" ]
+            items
+        ]
