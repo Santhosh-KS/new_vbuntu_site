@@ -111,6 +111,7 @@ view model =
     Html.div []
         [ nav model.navBar
         , breadCrumb model.breadCrumb
+        , productInfo model
         ]
 
 
@@ -129,7 +130,7 @@ defaultModel : NavModel
 defaultModel =
     { logoPath = "./assets/logo.png"
     , isBurgerIconClicked = False
-    , navBarListItems = [ ( "My Account", "" ), ( "Sign-in", "" ), ( "Shopping Cart (0)", "" ) ]
+    , navBarListItems = [ ( "About", "" ), ( "blogs", "" ), ( "sign-in", "" ) ]
     }
 
 
@@ -223,20 +224,84 @@ type alias BreadCrumbModel =
 breadCrumb : BreadCrumbModel -> Html MainMsg
 breadCrumb model =
     Html.section [ Attr.class "section pt-4 pb-0" ]
-        [ Html.nav [ Attr.class "breadcrumb" ]
-            [ Html.ul []
-                [ Html.li []
+        [ Html.nav [ Attr.class "breadcrumb has-arrow-separator" ]
+            [ Html.ul [ Attr.class "container" ]
+                [ Html.li [ Attr.class "has-text-grey" ]
                     [ Html.a []
                         [ Html.text "vbuntu" ]
                     ]
-                , Html.li []
+                , Html.li [ Attr.class "has-text-grey" ]
                     [ Html.a []
                         [ Html.text "about" ]
                     ]
-                , Html.li []
+                , Html.li [ Attr.class "is-active" ]
                     [ Html.a []
                         [ Html.text "blog" ]
                     ]
                 ]
             ]
         ]
+
+
+
+-- Product info
+
+
+productInfo : Model -> Html MainMsg
+productInfo model =
+    Html.section [ Attr.class "section" ]
+        [ Html.div [ Attr.class "container" ]
+            [ Html.div [ Attr.class "columns" ]
+                [ Html.div [ Attr.class "column is-size-8" ]
+                    [ Html.h1 [ Attr.class "title" ] [ Html.text "Mission" ]
+                    , Html.p [] [ Html.text "Our mission is to foster a dynamic environment where engineers from diverse backgrounds come together to exchange knowledge, tackle challenges, and inspire one another.\nWe believe in the power of community-driven learning and the transformative impact it has on both individual growth and the advancement of engineering as a whole." ]
+                    ]
+                , Html.div [ Attr.class "column is-size-5" ]
+                    [ Html.h1 [ Attr.class "title" ] [ Html.text "Vbuntu" ]
+                    , Html.p [] [ Html.text "Vbuntu (V-Bunt-U). “Bunt” in German is “Colorful”. So “Vbuntu” means “We make You Colorful”, as a community." ]
+                    ]
+                ]
+            ]
+        , Html.div [ Attr.class "container" ]
+            [ Html.div [ Attr.class "columns" ]
+                [ Html.div [ Attr.class "column " ]
+                    [ Html.h1 [ Attr.class "title" ] [ Html.text "Values" ]
+                    , Html.p [] [ Html.text "At Vbuntu, we embrace the Ubuntu philosophy—a concept deeply rooted in African culture and widely popularized in the open-source community. Ubuntu emphasizes the interconnectedness of humanity and the principles of compassion, unity, and mutual support. Similarly, our community values reflect these ideals:" ]
+                    ]
+                ]
+            ]
+        , Html.div [ Attr.class "container" ]
+            [ Html.div [ Attr.class "columns" ]
+                [ Html.div [ Attr.class "column is-size-3" ]
+                    [ Html.h1 [ Attr.class "title" ] [ Html.text "Inclusivity" ]
+                    , Html.p [] [ Html.text "We celebrate diversity and welcome individuals from all backgrounds, disciplines, and skill levels. Everyone has a unique perspective to contribute." ]
+                    ]
+                , Html.div [ Attr.class "column is-size-3" ]
+                    [ Html.h1 [ Attr.class "title" ] [ Html.text "Respect" ]
+                    , Html.p [] [ Html.text "We promote a culture of mutual respect and constructive communication. Treat others with kindness and empathy." ]
+                    ]
+                , Html.div [ Attr.class "column is-size-3" ]
+                    [ Html.h1 [ Attr.class "title" ] [ Html.text "Collaboration" ]
+                    , Html.p [] [ Html.text "Great things happen when we work together. Collaboration fosters innovation and accelerates progress." ]
+                    ]
+                , Html.div [ Attr.class "column is-size-3" ]
+                    [ Html.h1 [ Attr.class "title" ] [ Html.text "Community Building" ]
+                    , Html.p [] [ Html.text " We believe in building strong, supportive communities where members lift each other up and strive for collective success." ]
+                    ]
+                ]
+            ]
+        ]
+
+
+
+{- Embracing the Ubuntu Philosophy
+   At Vbuntu, we embrace the Ubuntu philosophy—a concept deeply rooted in African culture and widely popularized in the open-source community. Ubuntu emphasizes the interconnectedness of humanity and the principles of compassion, unity, and mutual support. Similarly, our community values reflect these ideals:
+
+   Inclusivity: We celebrate diversity and welcome individuals from all backgrounds, disciplines, and skill levels. Everyone has a unique perspective to contribute.
+
+   Respect: We promote a culture of mutual respect and constructive communication. Treat others with kindness and empathy.
+
+   Collaboration: Great things happen when we work together. Collaboration fosters innovation and accelerates progress.
+
+   Community Building: We believe in building strong, supportive communities where members lift each other up and strive for collective success.
+-}
