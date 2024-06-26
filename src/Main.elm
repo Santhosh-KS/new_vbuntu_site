@@ -163,6 +163,7 @@ view model =
         , myTab model.tabDetails
         , myTabContent model.tabDetails
 
+        -- , myCardContainer
         -- , footer
         ]
 
@@ -606,7 +607,9 @@ myMusicData flag =
 mySanthoshData : Bool -> Html MainMsg
 mySanthoshData flag =
     Html.div [ joinClassAttributes [ isActiveOrHidden flag ] ]
-        [ pTag ( "", "Santhosh Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat." )
+        [ myCardContainer
+
+        {- pTag ( "", "Santhosh Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat." ) -}
         ]
 
 
@@ -618,6 +621,47 @@ mySanthoshData flag =
                isActive flag
        in
        Html.div [ joinClassAttributes [ "container", active ] ]
-           [ pTag ( "", "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat." )
+           [
+               pTag ( "", "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat." )
            ]
 -}
+-- card
+{- <div class="card">
+     <div class="card-image">
+       <figure class="image is-4by3">
+         <img
+           src="https://bulma.io/assets/images/placeholders/1280x960.png"
+           alt="Placeholder image"
+         />
+       </figure>
+     </div>
+   </div>
+-}
+
+
+myCardContainer : Html MainMsg
+myCardContainer =
+    Html.section [ joinClassAttributes [ "section", "pt-1" ] ]
+        [ Html.div [ joinClassAttributes [ "container" ] ]
+            [ Html.div [ joinClassAttributes [ "columns" ] ]
+                [ Html.div [ joinClassAttributes [ "column is-3" ] ]
+                    [ Html.div [ joinClassAttributes [ "card" ] ]
+                        [ Html.div [ joinClassAttributes [ "card-image" ] ]
+                            [ Html.figure [ joinClassAttributes [ "image " ] ]
+                                [ Html.img [ Attr.src "./assets/vbuntuWb.png", Attr.style "max-width" "300px" ] []
+                                ]
+                            ]
+                        ]
+                    ]
+                , Html.div [ joinClassAttributes [ "column is-half" ] ]
+                    [ Html.div [ joinClassAttributes [ "card", "pt-4" ] ]
+                        [ Html.div [ joinClassAttributes [ "card-image" ] ]
+                            [ Html.figure [ joinClassAttributes [ "image" ] ]
+                                [ pTag ( "is-size-4", "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat." )
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]
